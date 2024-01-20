@@ -2,12 +2,23 @@
 
 @section('content')
 <div class="container">
+    <div class="row justify-content-center"> 
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <center>
+                    <h5><b>Sau khi đăng ký, tài khoản của bạn sẽ chưa thể đăng nhập! Hãy quay lại sau vài phút!</b></h5>
+                    <h5><b>Nhớ đăng xuất ra nhé!</b></h5>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
                 <div class="card-body">
+                    <center><h1>{{ __('Đăng ký') }}</h1></center><br>
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
@@ -62,13 +73,28 @@
                         </div>
 
                         <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-6 offset-md-4 dangky">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                                    {{ __('Đăng ký') }}
                                 </button>
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="row mb-3">
+                    <style>
+                        .dangnhap button{border-radius: 20px; width: 100px; text-align: center; font-weight: bold;}
+                        .dangky button{border-radius: 20px; width: 100px; text-align: center; font-weight: bold;}
+                    </style>
+                    <center>
+                    <label>Đã có tài khoản?
+                    <a href="{{url('login-admin')}}" class="dangnhap">
+                        <button class="btn btn-danger" type="submit">
+                        Đăng nhập
+                        </button>
+                    </a>
+                    ngay!</label>
+                    </center>
                 </div>
             </div>
         </div>

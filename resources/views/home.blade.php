@@ -16,7 +16,26 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    Welcome back master!
+                    @hasanyrole('master|admin')
+                        <div class="row">
+                            <center>
+                                <h1>
+                                Welcome back
+                                @role('master')
+                                    master!
+                                @else
+                                    !
+                                @endrole
+                                </h1>
+                            </center>
+                        </div>
+                        <div class="row">
+                            <img style="width: 100%; height: 430px" src="{{asset('public/uploads/truyen/welcome.gif')}}">
+                        </div>
+                    @else
+                        Bạn không đủ quyền hạn!
+                    @endhasanyrole
+                    
                 </div>
             </div>
         </div>

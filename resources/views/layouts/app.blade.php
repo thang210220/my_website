@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{csrf_token()}}">
 
     <title>Mangapro</title>
     <link rel="shortcut icon" href="{{asset('public/uploads/truyen/icon.png')}}"/>
@@ -16,6 +16,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -24,51 +25,60 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="logo" href="{{ route('home')}}"><img src="{{asset('public/uploads/truyen/logo.png')}}" style="margin-left: 30px; width:180px;"></a>
+                <style>
+                    .logo {margin-left: 510px}
+                    .logo img{width:280px;}
+                    #name_log {border-radius: 20px; width: 200px; text-align: center;
+                        font-weight: bold; background: #FF9900; margin-left: 550px}
+                </style>
+                <table>
+                    <tr>
+                        <td>
+                            <a class="logo" href=" {{ route('home') }}">
+                                <img src="{{asset('public/uploads/truyen/logo.png')}}">
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Right Side Of Navbar -->
+                            <ul class="navbar-nav ms-auto">
+                                <!-- Authentication Links -->
+                                @guest
+                                    <!-- @if (Route::has('login'))
+                                        <li class="nav-item">
+                                            <a class="nav-link btn-danger" href=" {{ route('login') }}">{{ __('Đăng nhập') }}</a>
+                                        </li>
+                                    @endif
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                                    @if (Route::has('register'))
+                                        <li class="nav-item">
+                                            <a class="nav-link btn-warning" href=" {{ route('register') }}">{{ __('Đăng ký') }}</a>
+                                        </li>
+                                    @endif -->
+                                @else
+                                    <li class="nav-item dropdown" id="name_log">
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                            <b>{{ Auth::user()->name }}</b>
+                                        </a>
 
-                    </ul>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                            document.getElementById('logout-form').submit();">
+                                                {{ __('Đăng xuất') }}
+                                            </a>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                <!-- {{ route('register') }} -->
-                                    <a class="nav-link" href="#">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                    </li>
+                                @endguest
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </nav>
 
@@ -78,9 +88,86 @@
     </div>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- gallery -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            load_gallery();
+
+            function load_gallery(){
+                var chap_id = $('.chap_id').val();
+                var _token = $('input[name="_token"]').val();
+                // alert(chap_id);
+                $.ajax({
+                    url:"{{url('/select-gallery')}}",
+                    method:"POST",
+                    data:{chap_id:chap_id, _token:_token},
+                    success:function(data){
+                        $('#gallery_load').html(data);
+                    }
+                });
+            }
+            $('#file').change(function(){
+                var error = '';
+                var files = $('#file')[0].files;
+                if (files.length > 100){
+                    error+='<p>Bạn chỉ được chọn tối đa 3 ảnh</p>';
+                }else if (files.length==''){
+                    error+='<p>Bạn không được bỏ trống ảnh</p>';
+                }else if (files.size > 2000000){
+                    error+='<p>Ảnh của bạn quá lớn</p>';
+                }
+                if (error==''){
+
+                }else {
+                    $('#file').val('');
+                    $('#error_gallery').html('<span class="text-danger">'+error+'</span>');
+                    return false;
+                }
+            });
+            $(document).on('click','.delete-gallery',function(){
+                var gal_id = $(this).data('gal_id');
+                var _token = $('input[name="_token"]').val();
+                if(confirm('Bạn muốn xóa hình ảnh này không?')){
+                    $.ajax({
+                        url:"{{url('/delete-gallery')}}",
+                        method:"POST",
+                        data:{gal_id:gal_id, _token:_token},
+                        success:function(data){
+                            load_gallery();
+                            $('#error_gallery').html('<h3 class="text-danger">Xóa hình ảnh thành công</h3>');
+                        }
+                    });
+                }
+            });
+            $(document).on('change','.file_image',function(){
+                var gal_id = $(this).data('gal_id');
+                var image = document.getElementById('file-'+gal_id).files[0];
+                var form_data = new FormData();
+                form_data.append("file", document.getElementById('file-'+gal_id).files[0]);
+                form_data.append("gal_id",gal_id);
+                    $.ajax({
+                        url:"{{url('/update-gallery')}}",
+                        method:"POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data:form_data,
+                        contentType:false,
+                        cache:false,
+                        processData:false,
+                        success:function(data){
+                            load_gallery();
+                            $('#error_gallery').html('<h3 class="text-danger">Cập nhật hình ảnh thành công</h3>');
+                        }
+                    });
+            });
+        });
+    </script>
+    <!-- tìm kiếm 2 -->
     <script type="text/javascript">
         $('#keywords2').keyup( function(){
             var keywords2 = $(this).val();
+            // alert(keywords2);
             if(keywords2 != '')
             {
                 var _token = $('input[name="_token"]').val();
@@ -89,19 +176,20 @@
                     method:"POST",
                     data:{keywords2:keywords2, _token:_token},
                     success:function(data){
-                        $('#search_ajax').fadeIn();
-                            $('#search_ajax').html(data);
+                        $('#search_ajax2').fadeIn();
+                            $('#search_ajax2').html(data);
                     }
                 });
             }else{
-                $('#search_ajax').fadeOut();
+                $('#search_ajax2').fadeOut();
             }
         });
         $(document).on('click', '.li_timkiem_ajax2', function(){
             $('#keywords2').val( $(this).text() );
-            $('#search_ajax').fadeOut();
+            $('#search_ajax2').fadeOut();
         });
     </script>
+    <!-- tìm kiếm 3 -->
     <script type="text/javascript">
         $('#keywords3').keyup( function(){
             var keywords3 = $(this).val();
@@ -126,19 +214,20 @@
             $('#search_ajax3').fadeOut();
         });
     </script>
+    <!-- ckeditor -->
     <script src="{{ asset('public/ckeditor/ckeditor.js') }}"></script>
     <script type="text/javascript">
-        CKEDITOR.replace('noidung_chapter',{
+        CKEDITOR.replace('ckeditor', {
             filebrowserImageUploadUrl : "{{ url('uploads-ckeditor?_token='.csrf_token()) }}",
-            filebrowserBrowserUrl : "{{ url('file-browser?_token='.csrf_token()) }}",
             filebrowserUploadMethod :'form'
+
         });
     </script>
+    <!-- Tự chạy slug -->
     <script type="text/javascript">
         function ChangeToSlug()
         {
             var slug;
-         
             //Lấy text từ thẻ input title 
             slug = document.getElementById("slug").value;
             slug = slug.toLowerCase();
@@ -167,6 +256,7 @@
             document.getElementById('convert_slug').value = slug;
         }
     </script>
+    <!-- Loại truyện -->
     <script type="text/javascript">
         $('.truyennoibat').change(function(){
             const truyennoibat = $(this).val();
@@ -175,7 +265,7 @@
             var _token = $('input[name="_token"]').val();
             
             if(truyennoibat==0){
-                var thongbao = 'Thay đổi truyện mới thành công';
+                var thongbao = 'Thay đổi truyện hay thành công';
             }else if(truyennoibat==1){
                 var thongbao = 'Thay đổi truyện nổi bật thành công';
             }else{
@@ -192,6 +282,45 @@
                     }
             });
         })
+    </script>
+    <!-- xếp hạng -->
+    <script type="text/javascript">
+        $('.topview').change(function(){
+            const topview = $(this).val();
+            
+            const truyen_id = $(this).data('truyen_id');
+            var _token = $('input[name="_token"]').val();
+            
+            if(topview==0){
+                var thongbao = 'Thay đổi topview ngày thành công';
+            }else if(topview==1){
+                var thongbao = 'Thay đổi topview tuần thành công';
+            }else{
+                var thongbao = 'Thay đổi topview tháng thành công';
+            }
+            $.ajax({
+                url:"{{url('/topview')}}",
+                method:"POST",
+                data:{topview:topview, truyen_id:truyen_id, _token:_token},
+                success:function(data)
+                    {
+                        // $('#thongbao').html('<span class="text text-alert">'+thongbao+'</span>');
+                        alert(thongbao);
+                    }
+            });
+        })
+    </script>
+    <!-- datatables -->
+    <script type="text/javascript" src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#myTable').DataTable();
+        } );
+    </script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#tableView').DataTable();
+        } );
     </script>
 </body>
 </html>

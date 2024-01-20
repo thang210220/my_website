@@ -11,50 +11,104 @@
                 @php
                     $count = count($truyen);
                 @endphp
-                <div class="card-header">Danh sách truyện: {{$count}}</div>
-
-                <div id="thongbao"></div>
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    <table class="table table-striped table-dark">
-                        <thead>
+                <style>
+                    .form-control {width: 405px; margin-left: 324px}
+                    .scroll-search2 {width: 492px; height: 400px; overflow-y: scroll;; margin-left: 324px}
+                    ul.dropdown-menu li{padding: 5px 15px;}
+                    ul.dropdown-menu li:hover { background: #FFCC66;}
+                    ul.dropdown-menu li a:hover { color: green;}
+                    ul.dropdown-menu li a{color: black; text-decoration: none}
+                </style>
+                <div class="card-header">
+                    <form autocomplete="off" action="{{url('tim-kiem2')}}" class="form-inline my-2 my-lg-0" method="POST">
+                        @csrf
+                        <table>
                             <tr>
-                                <th>#</th>
-                                <th>Tên truyện</th>
-                                <th>Ảnh</th>
-                                <th>Ngày tạo</th>
-                                <th>Ngày cập nhật</th>
-                                <th>Quản lý</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($truyen as $key => $tr)
-                            <tr>
-                                <th scope="row">{{ $key }}</th>
-                                <td>{{ $tr->tentruyen }}</td>
-                                <td><img src="{{asset('public/uploads/truyen/'.$tr->hinhanh)}}" height="250" width="180"></td>
-                                <td>{{$tr->created_at}} <br><p>{{$tr->created_at->diffForHumans()}}</p></td>
-                                <td>{{$tr->updated_at}} <br><p>{{$tr->updated_at->diffForHumans()}}</p></td>
+                                <td>Danh sách truyện: {{$count}}</td>
                                 <td>
-                                    <a href="{{route('truyen.edit',[$tr->id])}}" class="btn btn-primary">Edit</a><br><br>
+                                    <input class="form-control mr-sm-2" type="search" id="keywords2" name="tukhoa2" placeholder="Tìm kiếm" aria-label="Search">
+                                </td>
+                                <td>
+                                    <button class="btn btn-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                                </td>
+                            <tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div id="search_ajax2"></div>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="row">
+                    <style>
+                        .title_truyen {margin-left: 10px}
+                        .kytu {margin-left: 10px}
+                        .kytu a {color: black; padding: 5px 13px; background: #FFCC66; cursor: pointer; font-weight: bold;}
+                        .kytu a:hover {color: blue; margin-left: 10px}
+                    </style>
+                    <h3 class="title_truyen">Lọc A - Z</h3>
+                    <table class="kytu">
+                        <tr>
+                        @foreach(range('A', 'Z') as $char)
+                            <th><a href="{{url('/kytu/'.$char)}}">{{$char}}</a></th>
+                        @endforeach
+                        </tr>
+                    </table>
+                </div><br>
+                <h3 style="margin-left: 10px">Từ khóa tìm kiếm: {{$tukhoa2}}</h3>
+                <div class="row">
+                    @if($count == 0)
+                        <div class="col-md-12 updating">
+                            <div class="card-body">
+                                <h3>Không tìm thấy truyện...</h3>
+                            </div>
+                        </div>
+                    @else
+                        @foreach ($truyen as $key => $tr)
+                        <div class="col-2">
+                            <style>
+                                .image_name {text-align: center;}
+                                .image_name img:hover {border: 10px solid rgba(0,0,0,0.0);}
+                                .card-body a{text-decoration: none; color: #fff}
+                                .image_name a:hover {color: #3399FF;}
+                                .card-body {width: 200px; height: 320px; margin-left: 10px; margin-bottom: 10px; background-color: #212529}
+                                .image_name img{width: 180px; height: 220px; margin-left: -6px; margin-top: -5px;}
+                                .image_name h5{margin-top: 20px;}
+                                .button{text-align: center}
+                            </style>
+                            <div class="card-body">
+                                <div class="row image_name">
+                                    <a href="{{url('show-truyen/'.$tr->slug_truyen)}}">
+                                        <img src="{{asset('public/uploads/truyen/'.$tr->hinhanh)}}">
+                                        <h5>{{ $tr->tentruyen }}</h5>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row button">
+                                <div class="col-6">
+                                    <a href="{{route('truyen.edit',[$tr->id])}}" class="btn btn-primary" style="width: 70px; margin-bottom: 10px;">Edit</a>
+                                </div>
+                                <div class="col-6">
                                     <form action="{{route('truyen.destroy',[$tr->id])}}" method="post">
                                         @method ('DELETE')
                                         @csrf
-                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger">Delete</button>
+                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger" style="width: 70px; margin-bottom: 10px;">Delete</button>
                                     </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+</div><br>
+<div class="row">
+    {{ $truyen->links('pagination::bootstrap-4') }}
 </div>
 
 @endsection

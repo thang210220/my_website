@@ -9,17 +9,18 @@ class Chapter extends Model
 {
     use HasFactory;
     protected $dates = [
-        'created',
-        'updated',
+        'created_at',
+        'updated_at',
     ];
     public $timestamp = false;
     protected $fillable = [
-        'truyen_id', 'tieude', 'noidung', 'slug_chapter', 'created_at', 'updated_at'
+        'truyen_id','chap','tieude','views_chapter','slug_chapter','created_at','updated_at'
     ];
     protected $primaryKey = 'id';
     protected $table = 'chapter';
+    
     public function truyen(){
         return $this->belongsTo('App\Models\Truyen');
     }
-    
+    // đã khóa nội dung của ckeditor
 }

@@ -12,6 +12,13 @@ class TheloaiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('permission:edit genre|delete genre|add genre',['only' => ['index','show']]);
+        $this->middleware('permission:add genre', ['only' => ['create','store']]);
+        $this->middleware('permission:edit genre', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete genre', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $theloai = Theloai::orderBy('id','DESC')->get();
@@ -52,7 +59,7 @@ class TheloaiController extends Controller
         $theloai->tentheloai = $data['tentheloai'];
         $theloai->slug_theloai = $data['slug_theloai'];
         $theloai->save();
-        return redirect()->back()->with('status','Thêm thể loại thành công');
+        return redirect()->route('theloai.index')->with('status','Thêm thể loại thành công');
     }
 
     /**
@@ -102,7 +109,7 @@ class TheloaiController extends Controller
         $theloai->tentheloai = $data['tentheloai'];
         $theloai->slug_theloai = $data['slug_theloai'];
         $theloai->save();
-        return redirect()->back()->with('status','Cập nhật thể loại thành công');
+        return redirect()->route('theloai.index')->with('status','Cập nhật thể loại thành công');
     }
 
     /**

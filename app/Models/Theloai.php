@@ -8,14 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Theloai extends Model
 {
     use HasFactory;
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
     public $timestamp = false;
     protected $fillable = [
-        'tentheloai', 'slug_theloai'
+        'tentheloai', 'slug_theloai', 'created_at', 'updated_at'
     ];
     protected $primaryKey = 'id';
     protected $table = 'theloai';
 
     public function truyen(){
-        return $this->hasMany('App\Models\Truyen');
+        return $this->belongsTo('App\Models\Truyen');
     }
 }

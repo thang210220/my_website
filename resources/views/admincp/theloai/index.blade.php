@@ -4,9 +4,9 @@
 
 @include('layouts.nav')
 
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 @php
                     $count = count($theloai);
@@ -18,7 +18,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <table class="table table-striped table-dark">
+                    <table class="table table-striped table-dark" id="myTable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -34,11 +34,11 @@
                                 <td>{{ $value->tentheloai }}</td>
                                 <td>{{ $value->slug_theloai }}</td>
                                 <td>
-                                    <a href="{{route('theloai.edit',[$value->id])}}" class="btn btn-primary">Edit</a><br><br>
+                                    <a href="{{route('theloai.edit',[$value->id])}}" class="btn btn-primary" style="width: 110px; margin-bottom: 10px;">Edit</a>
                                     <form action="{{route('theloai.destroy',[$value->id])}}" method="post">
                                         @method ('DELETE')
                                         @csrf
-                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger">Delete</button>
+                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger" style="width: 110px; margin-bottom: 10px;">Delete</button>
                                     </form>
                                 </td>
                             </tr>

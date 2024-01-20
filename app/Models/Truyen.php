@@ -9,12 +9,13 @@ class Truyen extends Model
 {
     use HasFactory;
     protected $dates = [
-        'created',
-        'updated',
+        'created_at',
+        'updated_at',
     ];
     public $timestamp = false;
     protected $fillable = [
-        'tentruyen', 'tomtat', 'slug_truyen', 'hinhanh', 'danhmuc_id', 'theloai_id', 'created_at', 'updated_at', 'truyen_noibat'
+        'tentruyen','tacgia','tomtat','danhmuc_id','theloai_id','banner_id','views_truyen',
+        'hinhanh','slug_truyen','created_at','updated_at','truyen_noibat','topview','trangthai'
     ];
     protected $primaryKey = 'id';
     protected $table = 'truyen';
@@ -22,16 +23,16 @@ class Truyen extends Model
     public function danhmuctruyen(){
         return $this->belongsTo('App\Models\DanhmucTruyen','danhmuc_id','id');
     }
+    public function banner(){
+        return $this->belongsTo('App\Models\Banner','banner_id','id');
+    }
     public function chapter(){
-        return $this->hasMany('App\Models\DanhmucChapter','truyen_id','id');
+        return $this->hasMany('App\Models\Chapter','truyen_id','id');
     }
     public function theloai(){
         return $this->belongsTo('App\Models\Theloai','theloai_id','id');
     }
-    public function thuocnhieudanhmuctruyen(){
-        return $this->belongsToMany(DanhmucTruyen::class,'thuocdanh','truyen_id','danhmuc_id');
-    }
     public function thuocnhieutheloaitruyen(){
-        return $this->belongsToMany(Theloai::class,'theloai','truyen_id','theloai_id');
+        return $this->belongsToMany(Theloai::class,'thuocloai','truyen_id','theloai_id');
     }
 }

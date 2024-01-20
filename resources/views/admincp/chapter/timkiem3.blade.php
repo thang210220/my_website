@@ -38,17 +38,17 @@
                 </div>
 
                 <style>
-                    .title_truyen2 {margin-left: 10px}
-                    .kytu2 {margin-left: 10px}
-                    .kytu2 a {color: black; padding: 5px 13px; background: #FFCC66; cursor: pointer; font-weight: bold;}
-                    .kytu2 a:hover {color: blue; margin-left: 10px}
+                    .title_truyen3 {margin-left: 10px}
+                    .kytu3 {margin-left: 10px}
+                    .kytu3 a {color: black; padding: 5px 13px; background: #FFCC66; cursor: pointer; font-weight: bold;}
+                    .kytu3 a:hover {color: blue; margin-left: 10px}
                 </style>
                 <div class="row">
-                    <h3 class="title_truyen2">Lọc A - Z</h3>
-                    <table class="kytu2">
+                    <h3 class="title_truyen3">Lọc A - Z</h3>
+                    <table class="kytu3">
                         <tr>
                         @foreach(range('A', 'Z') as $char)
-                            <th><a href="{{url('/kytu2/'.$char)}}">{{$char}}</a></th>
+                            <th><a href="{{url('/kytu3/'.$char)}}">{{$char}}</a></th>
                         @endforeach
                         </tr>
                     </table>
@@ -64,6 +64,7 @@
                         <thead>
                             <tr>
                                 <th width="30px">#</th>
+                                <th width="50px">Chapter</th>
                                 <th width="300px">Tên Chapter</th>
                                 <th width="300px">Thuộc truyện</th>
                                 <th width="100px">Slug Chapter</th>
@@ -76,6 +77,7 @@
                             @foreach($chapter as $key => $chap)
                             <tr>
                                 <th scope="row">{{ $key }}</th>
+                                <td>{{ $chap->chap }}</td>
                                 <td>{{ $chap->tieude }}</td>
                                 <td>{{ $chap->truyen->tentruyen }}</td>
                                 <td>{{ $chap->slug_chapter }}</td>

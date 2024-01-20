@@ -11,15 +11,44 @@
                 @php
                     $count = count($list_truyen);
                 @endphp
-                <div class="card-header">Danh sách truyện: {{$count}}</div>
-
                 <style>
-                    .title_truyen {margin-left: 10px}
-                    .kytu {margin-left: 10px}
-                    .kytu a {color: black; padding: 5px 13px; background: #FFCC66; cursor: pointer; font-weight: bold;}
-                    .kytu a:hover {color: blue; margin-left: 10px}
+                    .form-control {width: 405px; margin-left: 324px}
+                    .scroll-search2 {width: 492px; height: 400px; overflow-y: scroll;; margin-left: 324px}
+                    ul.dropdown-menu li{padding: 5px 15px;}
+                    ul.dropdown-menu li:hover { background: #FFCC66;}
+                    ul.dropdown-menu li a:hover { color: green;}
+                    ul.dropdown-menu li a{color: black; text-decoration: none}
                 </style>
+                <div class="card-header">
+                    <form autocomplete="off" action="{{url('tim-kiem2')}}" class="form-inline my-2 my-lg-0" method="POST">
+                        @csrf
+                        <table>
+                            <tr>
+                                <td>Danh sách truyện: {{$count}}</td>
+                                <td>
+                                    <input class="form-control mr-sm-2" type="search" id="keywords2" name="tukhoa2" placeholder="Tìm kiếm" aria-label="Search">
+                                </td>
+                                <td>
+                                    <button class="btn btn-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                                </td>
+                            <tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div id="search_ajax2"></div>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
                 <div class="row">
+                    <style>
+                        .title_truyen {margin-left: 10px}
+                        .kytu {margin-left: 10px}
+                        .kytu a {color: black; padding: 5px 13px; background: #FFCC66; cursor: pointer; font-weight: bold;}
+                        .kytu a:hover {color: blue; margin-left: 10px}
+                    </style>
                     <h3 class="title_truyen">Lọc A - Z</h3>
                     <table class="kytu">
                         <tr>
@@ -28,99 +57,54 @@
                         @endforeach
                         </tr>
                     </table>
-                </div>
-
-                <div id="thongbao"></div>
-                <div class="card-body">
+                </div><br>
+                <div class="row">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
-                    <table class="table table-striped table-dark">
-                        <thead>
-                            <tr>
-                                <th width="30px">#</th>
-                                <th width="100px">Tên truyện</th>
-                                <th width="80px">Ảnh</th>
-                                <th width="100px">Tác giả</th>
-                                <th width="100px">Slug truyện</th>
-                                <th width="700px">Tóm tắt</th>
-                                <th width="50px">Danh mục</th>
-                                <th width="50px">Thể loại</th>
-                                <th width="150px">Ngày tạo</th>
-                                <th width="200px">Ngày cập nhật</th>
-                                <th>Trạng thái</th>
-                                <th>Kiểu</th>
-                                <th>Quản lý</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($list_truyen as $key => $truyen)
-                            <tr>
-                                <th scope="row">{{ $key }}</th>
-                                <td>{{ $truyen->tentruyen }}</td>
-                                <td><img src="{{asset('public/uploads/truyen/'.$truyen->hinhanh)}}" height="250" width="180"></td>
-                                <td>{{ $truyen->tacgia }}</td>
-                                <td>{{ $truyen->slug_truyen }}</td>
-                                <td>{{ $truyen->tomtat }}</td>
-                                <td>{{ $truyen->danhmuctruyen->tendanhmuc }}</td>
-                                <td>{{ $truyen->theloai->tentheloai }}</td>
-                                <td>{{$truyen->created_at}} <br><p>{{$truyen->created_at->diffForHumans()}}</p></td>
-                                <td>{{$truyen->updated_at}} <br><p>{{$truyen->updated_at->diffForHumans()}}</p></td>
-                                <td>
-                                    @if($truyen->trangthai==0)
-                                        <span class="text text-success">Hoàn thành</span>
-                                    @else
-                                        <span class="text text-primary">Đang tiến hành</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($truyen->truyen_noibat == 0)
-                                        <form>
-                                            @csrf
-                                            <select name="truyennoibat" data-truyen_id="{{$truyen->id}}" class="custom-select truyennoibat">
-                                                <option selected value="0">Truyện hay</option>
-                                                <option value="1">Truyện nổi bật</option>
-                                                <option value="2">Truyện xem nhiều</option>
-                                            </select>
-                                        </form>
-                                    @elseif($truyen->truyen_noibat == 1)
-                                        <form>
-                                            @csrf
-                                            <select name="truyennoibat" data-truyen_id="{{$truyen->id}}" class="custom-select truyennoibat">
-                                                <option value="0">Truyện hay</option>
-                                                <option selected value="1">Truyện nổi bật</option>
-                                                <option value="2">Truyện xem nhiều</option>
-                                            </select>
-                                        </form>
-                                    @else($truyen->truyen_noibat == 2)
-                                        <form>
-                                            @csrf
-                                            <select name="truyennoibat" data-truyen_id="{{$truyen->id}}" class="custom-select truyennoibat">
-                                                <option value="0">Truyện hay</option>
-                                                <option value="1">Truyện nổi bật</option>
-                                                <option selected value="2">Truyện xem nhiều</option>
-                                            </select>
-                                        </form>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{route('truyen.edit',[$truyen->id])}}" class="btn btn-primary">Edit</a><br><br>
-                                    <form action="{{route('truyen.destroy',[$truyen->id])}}" method="post">
-                                        @method ('DELETE')
-                                        @csrf
-                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    @foreach ($list_truyen as $key => $truyen)
+                    <div class="col-2">
+                        <style>
+                            .image_name {text-align: center;}
+                            .image_name img:hover {border: 10px solid rgba(0,0,0,0.0);}
+                            .card-body a{text-decoration: none; color: #fff}
+                            .image_name a:hover {color: #3399FF;}
+                            .card-body {width: 200px; height: 320px; margin-left: 10px; margin-bottom: 10px; background-color: #212529}
+                            .image_name img{width: 180px; height: 220px; margin-left: -6px; margin-top: -5px;}
+                            .image_name h5{margin-top: 20px;}
+                            .button{text-align: center}
+                        </style>
+                        <div class="card-body">
+                            <div class="row image_name">
+                                <a href="{{url('show-truyen/'.$truyen->slug_truyen)}}">
+                                    <img src="{{asset('public/uploads/truyen/'.$truyen->hinhanh)}}">
+                                    <h5>{{ $truyen->tentruyen }}</h5>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row button">
+                            <div class="col-6">
+                                <a href="{{route('truyen.edit',[$truyen->id])}}" class="btn btn-primary" style="width: 70px; margin-bottom: 10px;">Edit</a>
+                            </div>
+                            <div class="col-6">
+                                <form action="{{route('truyen.destroy',[$truyen->id])}}" method="post">
+                                    @method ('DELETE')
+                                    @csrf
+                                    <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger" style="width: 70px; margin-bottom: 10px;">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
+</div><br>
+<div class="row" style="margin-left: 1325px">
+    {{ $list_truyen->links('pagination::bootstrap-4') }}
 </div>
 
 @endsection

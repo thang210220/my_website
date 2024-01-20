@@ -5,9 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
-
                 <div class="card-body">
+                    <center><h1>{{ __('Đăng nhập') }}</h1></center><br>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
@@ -39,7 +38,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -49,22 +48,37 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
+                            <div class="col-md-8 offset-md-4 dangnhap">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
+                                    {{ __('Đăng nhập') }}
                                 </button>
-
+                                <!-- 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
-                                @endif
+                                @endif -->
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="row mb-3">
+                    <style>
+                        .dangnhap button{border-radius: 20px; width: 100px; text-align: center; font-weight: bold;}
+                        .dangky button{border-radius: 20px; width: 100px; text-align: center; font-weight: bold;}
+                    </style>
+                    <center>
+                    <label>Chưa có tài khoản?
+                    <a href="{{url('register-admin')}}" class="dangky">
+                        <button class="btn btn-warning" type="submit">
+                        Đăng ký
+                        </button>
+                    </a>   
+                    ngay!</label>
+                    </center>
                 </div>
             </div>
         </div>

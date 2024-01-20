@@ -4,19 +4,21 @@
 
 @include('layouts.nav')
 
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Danh sách danh mục</div>
-
+                @php
+                    $count = count($danhmuctruyen);
+                @endphp
+                <div class="card-header">Danh sách danh mục: {{$count}}</div>
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
-                    <table class="table table-striped table-dark">
+                    <table class="table table-striped table-dark" id="myTable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -32,11 +34,11 @@
                                 <td>{{ $danhmuc->tendanhmuc }}</td>
                                 <td>{{ $danhmuc->slug_danhmuc }}</td>
                                 <td>
-                                    <a href="{{route('danhmuc.edit',[$danhmuc->id])}}" class="btn btn-primary">Edit</a><br><br>
+                                    <a href="{{route('danhmuc.edit',[$danhmuc->id])}}" class="btn btn-primary" style="width: 110px; margin-bottom: 10px;">Edit</a>
                                     <form action="{{route('danhmuc.destroy',[$danhmuc->id])}}" method="post">
                                         @method ('DELETE')
                                         @csrf
-                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger">Delete</button>
+                                        <button onclick="return confirm('Bạn có muốn xóa không?');" class="btn btn-danger" style="width: 110px; margin-bottom: 10px;">Delete</button>
                                     </form>
                                 </td>
                             </tr>

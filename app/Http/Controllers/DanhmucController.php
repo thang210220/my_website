@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DanhmucTruyen;
+use Carbon\Carbon;
 
 class DanhmucController extends Controller
 {
@@ -12,6 +13,13 @@ class DanhmucController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('permission:edit category|delete category|add category',['only' => ['index','show']]);
+        $this->middleware('permission:add category', ['only' => ['create','store']]);
+        $this->middleware('permission:edit category', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete category', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $danhmuctruyen = DanhmucTruyen::orderBy('id','DESC')->get();
@@ -52,7 +60,7 @@ class DanhmucController extends Controller
         $danhmuctruyen->tendanhmuc = $data['tendanhmuc'];
         $danhmuctruyen->slug_danhmuc = $data['slug_danhmuc'];
         $danhmuctruyen->save();
-        return redirect()->back()->with('status','Thêm danh mục thành công');
+        return redirect()->route('danhmuc.index')->with('status','Thêm danh mục thành công');
     }
 
     /**
@@ -102,7 +110,7 @@ class DanhmucController extends Controller
         $danhmuctruyen->tendanhmuc = $data['tendanhmuc'];
         $danhmuctruyen->slug_danhmuc = $data['slug_danhmuc'];
         $danhmuctruyen->save();
-        return redirect()->back()->with('status','Cập nhật danh mục thành công');
+        return redirect()->route('danhmuc.index')->with('status','Cập nhật danh mục thành công');
     }
 
     /**
